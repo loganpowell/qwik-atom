@@ -18,6 +18,7 @@ import {
 } from "./store/appStore";
 import { DataState } from "./types/data";
 import { calculateDiff, type DiffState } from "./store/diff";
+import { useContextCursor } from "./hooks/useContextCursor";
 
 import "./global.css";
 
@@ -37,6 +38,10 @@ export default component$(() => {
   useContextProvider(APP_STATE_CTX, state);
   useContextProvider(COMMITTED_STATE_CTX, committedState);
   useContextProvider(DIFF_STATE_CTX, diffState);
+
+  const [, stateCursor] = useContextCursor(APP_STATE_CTX);
+  const [, committedCursor] = useContextCursor(COMMITTED_STATE_CTX);
+  const [, diffCursor] = useContextCursor(DIFF_STATE_CTX);
 
   useVisibleTask$(async () => {
     // 1. Load committed state from JSON file
@@ -61,14 +66,14 @@ export default component$(() => {
     }
 
     // 3. Update committed state
-    Object.assign(committedState, committedData);
+    committedCursor.reset(committedData);
 
     // 4. Update staged state (main reactive state)
-    Object.assign(state, stagedData);
+    stateCursor.reset(stagedData);
 
     // 5. Calculate initial diff
     const initialDiff = calculateDiff(committedData, stagedData);
-    Object.assign(diffState, initialDiff);
+    diffCursor.reset(initialDiff);
 
     // Note: localStorage persistence and diff recalculation now happens
     // in the useContextCursor hook when state is updated

@@ -2,22 +2,17 @@
   "features": [
     {
       "id": "1",
-      "name": "Hello world!",
-      "description": "Description from file."
-    },
-    {
-      "id": "2",
-      "name": "World",
-      "description": "Description from file."
-    },
-    {
-      "id": "3",
-      "name": "This",
+      "name": "The ostrich shoves his head in the sand",
       "description": "New feature description"
     },
     {
-      "id": "4",
-      "name": "AGAIN",
+      "id": "2",
+      "name": "and believes he has hidden what he saw",
+      "description": "New feature description"
+    },
+    {
+      "id": "3",
+      "name": "from the world!",
       "description": "New feature description"
     }
   ]

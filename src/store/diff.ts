@@ -20,12 +20,6 @@ export function calculateDiff(
   let modifiedCount = 0;
   let deletedCount = 0;
 
-  // Compare count
-  if (committed.count !== staged.count) {
-    changedPaths.push("count");
-    modifiedCount++;
-  }
-
   // Compare features
   const committedFeatures = committed.features || [];
   const stagedFeatures = staged.features || [];

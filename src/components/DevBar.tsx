@@ -8,7 +8,7 @@ import { getDiffSummary, calculateDiff } from "~/store/diff";
 import { useContextCursor } from "~/hooks/useContextCursor";
 
 export const DevBar = component$(() => {
-  const diff = useContext(DIFF_STATE_CTX);
+  const [diff, diffCursor] = useContextCursor(DIFF_STATE_CTX);
   const [state, stateCursor] = useContextCursor(APP_STATE_CTX);
   const [commits, commitsCursor] = useContextCursor(COMMITTED_STATE_CTX);
 
@@ -16,46 +16,70 @@ export const DevBar = component$(() => {
     <div
       style={{
         position: "fixed",
-        bottom: "10px",
-        right: "10px",
-        background: "#eee",
-        padding: "10px",
-        border: "1px solid #ccc",
-        minWidth: "250px",
+        top: "calc(var(--spacing-unit) * 3)",
+        right: "calc(var(--spacing-unit) * 3)",
+        background: "var(--color-bg)",
+        padding: "calc(var(--spacing-unit) * 3)",
+        border: "1px solid var(--color-border)",
+        minWidth: "280px",
+        fontSize: "0.75rem",
       }}
     >
-      <h3>Dev Bar</h3>
+      <h3
+        style={{
+          marginBottom: "calc(var(--spacing-unit) * 3)",
+          fontSize: "0.875rem",
+        }}
+      >
+        Development
+      </h3>
 
       {/* Diff Status */}
-      <div style={{ marginBottom: "10px" }}>
-        <strong>Changes:</strong>{" "}
-        <span style={{ color: diff.hasChanges ? "orange" : "green" }}>
+      <div style={{ marginBottom: "calc(var(--spacing-unit) * 2)" }}>
+        <span style={{ color: "var(--color-text-secondary)" }}>Changes: </span>
+        <span
+          style={{
+            color: diff.hasChanges
+              ? "var(--color-accent)"
+              : "var(--color-text-secondary)",
+          }}
+        >
           {getDiffSummary(diff)}
         </span>
       </div>
 
       {/* State Info */}
-      <p style={{ fontSize: "12px", margin: "5px 0" }}>
+      <p
+        style={{
+          fontSize: "0.75rem",
+          marginBottom: "calc(var(--spacing-unit) * 3)",
+          color: "var(--color-text-secondary)",
+        }}
+      >
         Count: {state.count} | Features: {state.features.length}
       </p>
 
       {/* Actions */}
-      <div style={{ display: "flex", gap: "5px", flexDirection: "column" }}>
+      <div
+        style={{
+          display: "flex",
+          gap: "calc(var(--spacing-unit) * 1)",
+          flexDirection: "column",
+        }}
+      >
         <button
+          class="accent"
           onClick$={() => {
             localStorage.removeItem("appState");
             window.location.reload();
           }}
           style={{
-            padding: "5px 10px",
-            background: "#f44336",
-            color: "white",
-            border: "none",
-            borderRadius: "4px",
-            cursor: "pointer",
+            fontSize: "0.75rem",
+            padding:
+              "calc(var(--spacing-unit) * 1) calc(var(--spacing-unit) * 2)",
           }}
         >
-          Reset (Reload)
+          Reset
         </button>
 
         <button
@@ -67,23 +91,20 @@ export const DevBar = component$(() => {
             localStorage.removeItem("appState");
 
             // Recalculate diff (should now be "no changes")
-            const newDiff = calculateDiff(commits, commits);
-            Object.assign(diff, newDiff);
+            diffCursor.reset(calculateDiff(commits, commits));
           }}
           disabled={!diff.hasChanges}
           style={{
-            padding: "5px 10px",
-            background: diff.hasChanges ? "#ff9800" : "#ccc",
-            color: "white",
-            border: "none",
-            borderRadius: "4px",
-            cursor: diff.hasChanges ? "pointer" : "not-allowed",
+            fontSize: "0.75rem",
+            padding:
+              "calc(var(--spacing-unit) * 1) calc(var(--spacing-unit) * 2)",
           }}
         >
-          Rollback Changes
+          Rollback
         </button>
 
         <button
+          class={diff.hasChanges ? "primary" : ""}
           onClick$={async () => {
             try {
               // Serialize the data to remove any circular references
@@ -105,29 +126,25 @@ export const DevBar = component$(() => {
                 localStorage.removeItem("appState");
 
                 // Recalculate diff (should now be "no changes")
-                const newDiff = calculateDiff(state, state);
-                Object.assign(diff, newDiff);
+                diffCursor.reset(calculateDiff(state, state));
 
-                alert("Features committed to file successfully!");
+                alert("✅ Features committed to file successfully!");
               } else {
-                alert("Failed to commit features");
+                alert("❌ Failed to commit features");
               }
             } catch (error) {
               console.error("Error committing features:", error);
-              alert("Error committing features");
+              alert("❌ Error committing features");
             }
           }}
           disabled={!diff.hasChanges}
           style={{
-            padding: "5px 10px",
-            background: diff.hasChanges ? "#4CAF50" : "#ccc",
-            color: "white",
-            border: "none",
-            borderRadius: "4px",
-            cursor: diff.hasChanges ? "pointer" : "not-allowed",
+            fontSize: "0.75rem",
+            padding:
+              "calc(var(--spacing-unit) * 1) calc(var(--spacing-unit) * 2)",
           }}
         >
-          Commit to File
+          Commit
         </button>
       </div>
     </div>

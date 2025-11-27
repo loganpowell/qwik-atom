@@ -8,9 +8,6 @@ dependencies:
   '@builder.io/qwik':
     specifier: ^1.17.2
     version: 1.17.2(vite@7.1.11)
-  '@thi.ng/atom':
-    specifier: ^5.3.50
-    version: 5.3.50
   '@thi.ng/equiv':
     specifier: ^2.1.99
     version: 2.1.99
@@ -23,7 +20,7 @@ devDependencies:
     specifier: ^1.17.2
     version: 1.17.2(@types/node@20.19.25)(typescript@5.4.5)
   '@types/node':
-    specifier: ^20.19.25
+    specifier: ^20.8.4
     version: 20.19.25
   typescript:
     specifier: 5.4.5
@@ -32,7 +29,7 @@ devDependencies:
     specifier: 7.1.11
     version: 7.1.11(@types/node@20.19.25)
   vite-tsconfig-paths:
-    specifier: ^4.3.2
+    specifier: ^4.2.1
     version: 4.3.2(typescript@5.4.5)(vite@7.1.11)
 
 packages:
@@ -732,16 +729,6 @@ packages:
   /@thi.ng/api@8.12.9:
     resolution: {integrity: sha512-PGBNAvAPXzqviQXGQjL4h5kUQnIiwoLLNDGK4sGGMG4a4OnpZ/FU6juMB7h+p4JtAH209synF3L9Q/xxxzxtJg==}
     engines: {node: '>=18'}
-    dev: false
-
-  /@thi.ng/atom@5.3.50:
-    resolution: {integrity: sha512-92jmYgy/8LK/ijrHkBwDf61gnn5dj81/4sp6g5iRPVk1ccqFwa44ELOpZSjvJrhgncdYMuwwXM2jYvVU4oIYHg==}
-    engines: {node: '>=18'}
-    dependencies:
-      '@thi.ng/api': 8.12.9
-      '@thi.ng/equiv': 2.1.99
-      '@thi.ng/errors': 2.5.49
-      '@thi.ng/paths': 5.2.28
     dev: false
 
   /@thi.ng/checks@3.7.25:

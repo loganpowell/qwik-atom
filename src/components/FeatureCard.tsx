@@ -7,12 +7,48 @@ export const FeatureCard = component$<{ feature: Feature }>(({ feature }) => {
   const [_, featuresCursor] = useContextCursor(APP_STATE_CTX, ["features"]);
 
   return (
-    <div style={{ border: "1px solid #ccc", padding: "10px", margin: "10px" }}>
-      <h4>{feature.name}</h4>
-      <p>{feature.description}</p>
+    <div
+      style={{
+        borderTop: "1px solid var(--color-border)",
+        paddingTop: "calc(var(--spacing-unit) * 3)",
+        paddingBottom: "calc(var(--spacing-unit) * 3)",
+        display: "grid",
+        gap: "calc(var(--spacing-unit) * 2)",
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "start",
+        }}
+      >
+        <div style={{ flex: 1 }}>
+          <h4 style={{ marginBottom: "calc(var(--spacing-unit) * 1)" }}>
+            {feature.name}
+          </h4>
+          <p style={{ fontSize: "0.875rem" }}>{feature.description}</p>
+        </div>
+        <button
+          class="accent"
+          onClick$={() => {
+            featuresCursor.swap((features: Feature[]) =>
+              features.filter((f) => f.id !== feature.id)
+            );
+          }}
+          style={{
+            padding:
+              "calc(var(--spacing-unit) * 1) calc(var(--spacing-unit) * 2)",
+            fontSize: "0.75rem",
+          }}
+        >
+          Delete
+        </button>
+      </div>
       <input
         type="text"
         value={feature.name}
+        placeholder="Feature name"
         onInput$={(e) => {
           const newName = (e.target as HTMLInputElement).value;
 
@@ -23,24 +59,6 @@ export const FeatureCard = component$<{ feature: Feature }>(({ feature }) => {
           );
         }}
       />
-      <button
-        onClick$={() => {
-          featuresCursor.swap((features: Feature[]) =>
-            features.filter((f) => f.id !== feature.id)
-          );
-        }}
-        style={{
-          marginTop: "5px",
-          padding: "5px 10px",
-          background: "#f44336",
-          color: "white",
-          border: "none",
-          borderRadius: "4px",
-          cursor: "pointer",
-        }}
-      >
-        Delete
-      </button>
     </div>
   );
 });
