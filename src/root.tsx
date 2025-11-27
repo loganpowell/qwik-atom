@@ -11,9 +11,9 @@ import {
 } from "@builder.io/qwik-city";
 import { RouterHead } from "./router-head";
 import {
-  appAtom,
-  stagedCursor,
+  createEmptyDataState,
   APP_STATE_CTX,
+  COMMITTED_STATE_CTX,
   DIFF_STATE_CTX,
 } from "./store/appStore";
 import { DataState } from "./types/data";
@@ -22,7 +22,8 @@ import { calculateDiff, type DiffState } from "./store/diff";
 import "./global.css";
 
 export default component$(() => {
-  const state = useStore<DataState>(stagedCursor.deref());
+  const state = useStore<DataState>(createEmptyDataState());
+  const committedState = useStore<DataState>(createEmptyDataState());
   const diffState = useStore<DiffState>({
     hasChanges: false,
     changedPaths: [],
@@ -34,6 +35,7 @@ export default component$(() => {
   });
 
   useContextProvider(APP_STATE_CTX, state);
+  useContextProvider(COMMITTED_STATE_CTX, committedState);
   useContextProvider(DIFF_STATE_CTX, diffState);
 
   useVisibleTask$(async () => {
@@ -58,40 +60,24 @@ export default component$(() => {
       console.log("No staged state, using committed as initial staged");
     }
 
-    // 3. Update atom with both committed and staged
-    appAtom.swap((s) => ({
-      ...s,
-      committed: committedData,
-      staged: stagedData,
-    }));
+    // 3. Update committed state
+    Object.assign(committedState, committedData);
 
-    // 4. Calculate initial diff
-    const initialDiff = calculateDiff(committedData, stagedData);
-    console.log("Initial diff:", initialDiff);
-    appAtom.swap((s) => ({ ...s, diff: initialDiff }));
-    Object.assign(diffState, initialDiff);
-
-    // 5. Sync Qwik store with staged cursor
+    // 4. Update staged state (main reactive state)
     Object.assign(state, stagedData);
 
-    // 6. Watch for staged changes and save to localStorage + recalculate diff
-    stagedCursor.addWatch("persist-to-localstorage", (id, prev, curr) => {
-      localStorage.setItem("appState", JSON.stringify(curr));
+    // 5. Calculate initial diff
+    const initialDiff = calculateDiff(committedData, stagedData);
+    Object.assign(diffState, initialDiff);
 
-      // Recalculate diff whenever staged changes
-      const committed = appAtom.deref().committed;
-      const newDiff = calculateDiff(committed, curr);
-      appAtom.swap((s) => ({ ...s, diff: newDiff }));
-
-      // Update Qwik diff store for reactivity
-      Object.assign(diffState, newDiff);
-    });
+    // Note: localStorage persistence and diff recalculation now happens
+    // in the useContextCursor hook when state is updated
   });
 
   return (
     <QwikCityProvider>
       <head>
-        <meta charSet="utf-8" />
+        <meta />
         <link rel="manifest" href="/manifest.json" />
         <RouterHead />
       </head>

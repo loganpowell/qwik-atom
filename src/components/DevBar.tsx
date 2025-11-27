@@ -1,16 +1,16 @@
 import { component$, useContext } from "@builder.io/qwik";
 import {
-  diffCursor,
-  stagedCursor,
-  committedCursor,
   APP_STATE_CTX,
+  COMMITTED_STATE_CTX,
   DIFF_STATE_CTX,
 } from "~/store/appStore";
 import { getDiffSummary, calculateDiff } from "~/store/diff";
+import { useContextCursor } from "~/hooks/useContextCursor";
 
 export const DevBar = component$(() => {
   const diff = useContext(DIFF_STATE_CTX);
-  const state = useContext(APP_STATE_CTX);
+  const [state, stateCursor] = useContextCursor(APP_STATE_CTX);
+  const [commits, commitsCursor] = useContextCursor(COMMITTED_STATE_CTX);
 
   return (
     <div
@@ -61,17 +61,13 @@ export const DevBar = component$(() => {
         <button
           onClick$={() => {
             // Rollback: reset staged to committed
-            const committed = committedCursor.deref();
-            stagedCursor.reset(committed);
-
-            // Update Qwik store to match
-            Object.assign(state, committed);
+            stateCursor.reset(JSON.parse(JSON.stringify(commits)));
 
             // Clear localStorage
             localStorage.removeItem("appState");
 
             // Recalculate diff (should now be "no changes")
-            const newDiff = calculateDiff(committed, committed);
+            const newDiff = calculateDiff(commits, commits);
             Object.assign(diff, newDiff);
           }}
           disabled={!diff.hasChanges}
@@ -103,7 +99,7 @@ export const DevBar = component$(() => {
 
               if (response.ok) {
                 // Update committed to match staged
-                committedCursor.reset(state);
+                commitsCursor.reset(JSON.parse(JSON.stringify(state)));
 
                 // Clear localStorage since committed now matches staged
                 localStorage.removeItem("appState");

@@ -1,6 +1,6 @@
-# Qwik + @thi.ng/atom State Management POC
+# Qwik + @thi.ng/paths State Management POC
 
-A proof-of-concept demonstrating integration of [@thi.ng/atom](https://github.com/thi-ng/umbrella/tree/develop/packages/atom) state management with [Qwik](https://qwik.dev).
+A proof-of-concept demonstrating integration of [@thi.ng/paths](https://github.com/thi-ng/umbrella/tree/develop/packages/paths) with [Qwik](https://qwik.dev) using a cursor-based API.
 
 ## Key Features
 
@@ -13,10 +13,10 @@ A proof-of-concept demonstrating integration of [@thi.ng/atom](https://github.co
 ### State Management Pattern
 
 - ✅ Immutable updates using `@thi.ng/paths`
-- ✅ Automatic localStorage persistence via atom watchers
+- ✅ Automatic localStorage persistence via `useContextCursor` hook
 - ✅ Real-time diff calculation
 - ✅ Qwik reactivity via `useContext`
-- ✅ DRY helper function (`updateState`) for common update pattern
+- ✅ Cursor-based API with serializable QRL functions
 
 ### Developer Experience
 
@@ -36,39 +36,49 @@ A proof-of-concept demonstrating integration of [@thi.ng/atom](https://github.co
 ┌─────────────────┐
 │  localStorage   │ ← Staged state (persists across reloads)
 └────────┬────────┘
-         │ Sync via watcher
+         │ Updated on each change
          ↓
 ┌─────────────────┐
-│   @thi.ng/atom  │ ← In-memory atom with cursors
-│  (stagedCursor) │
+│  Qwik Contexts  │ ← Reactive state stores
+│ (APP_STATE_CTX, │
+│ COMMITTED_CTX)  │
 └────────┬────────┘
-         │ useContext
+         │ useContextCursor hook
          ↓
 ┌─────────────────┐
-│  Qwik Context   │ ← Component state (triggers reactivity)
-│  (APP_STATE_CTX)│
+│ Cursor Interface│ ← Serializable swap/reset operations
+│ (QRL functions) │
 └─────────────────┘
 ```
 
 ## Update Pattern
 
-All state updates follow this pattern (abstracted into `updateState()` helper):
+All state updates use the `useContextCursor()` hook, which follows React's convention by returning `[value, cursor]`:
 
 ```tsx
-import { updateState } from "~/utils/stateHelpers";
+import { useContextCursor } from "~/hooks/useContextCursor";
 
-// Update count
-updateState(state, ["count"], (c: number) => c + 1);
+// Get the value and cursor for a specific path (like React's useState)
+const [features, featuresCursor] = useContextCursor(APP_STATE_CTX, [
+  "features",
+]);
 
-// Update array
-updateState(state, ["features"], (features) => [...features, newFeature]);
+// Update with swap (immutable update function)
+featuresCursor.swap((features) => [...features, newFeature]);
+
+// Or reset to a new value
+featuresCursor.reset([]);
+
+// If you only need the cursor for updates (not the value)
+const [, cursor] = useContextCursor(APP_STATE_CTX);
 ```
 
 Under the hood, this:
 
-1. Creates immutable update with `@thi.ng/paths`
+1. Creates immutable update with `@thi.ng/paths` `updateIn`
 2. Updates Qwik context (triggers UI reactivity)
-3. Syncs to atom cursor (triggers watcher → localStorage + diff calculation)
+3. Saves to localStorage (for APP_STATE_CTX)
+4. Recalculates diff against committed state
 
 ## Project Structure
 
@@ -77,15 +87,15 @@ src/
 ├── components/
 │   ├── DevBar.tsx           # Developer toolbar
 │   └── FeatureCard.tsx      # Editable feature component
+├── hooks/
+│   └── useContextCursor.ts  # Cursor hook for state updates
 ├── routes/
 │   ├── index.tsx            # Home page (counter demo)
 │   ├── features/index.tsx   # Features list
 │   └── api/features/index.ts # Commit endpoint
 ├── store/
-│   ├── appStore.ts          # Atom, cursors, contexts
+│   ├── appStore.ts          # Context definitions
 │   └── diff.ts              # Diff calculation
-├── utils/
-│   └── stateHelpers.ts      # DRY update helper
 └── types/
     └── data.ts              # TypeScript types
 ```

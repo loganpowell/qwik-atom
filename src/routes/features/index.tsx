@@ -2,16 +2,16 @@ import { component$, useContext } from "@builder.io/qwik";
 import { Link } from "@builder.io/qwik-city";
 import { APP_STATE_CTX } from "~/store/appStore";
 import { FeatureCard } from "~/components/FeatureCard";
-import { updateState } from "~/utils/stateHelpers";
+import { useContextCursor } from "~/hooks/useContextCursor";
 import type { Feature } from "~/types/data";
 
 export default component$(() => {
-  const state = useContext(APP_STATE_CTX);
+  const [features, featuresCursor] = useContextCursor(APP_STATE_CTX, [
+    "features",
+  ]);
 
   // Sort features by ID
-  const sortedFeatures = [...state.features].sort((a, b) =>
-    a.id.localeCompare(b.id)
-  );
+  const sortedFeatures = [...features].sort((a, b) => a.id.localeCompare(b.id));
 
   return (
     <div style={{ padding: "20px" }}>
@@ -23,14 +23,14 @@ export default component$(() => {
 
       <button
         onClick$={() => {
-          const newId = String(state.features.length + 1);
+          const newId = String(features.length + 1);
           const newFeature = {
             id: newId,
             name: `Feature ${newId}`,
             description: "New feature description",
           };
 
-          updateState(state, ["features"], (features: Feature[]) => [
+          featuresCursor.swap((features: Feature[]) => [
             ...features,
             newFeature,
           ]);

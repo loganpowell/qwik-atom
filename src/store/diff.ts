@@ -27,8 +27,8 @@ export function calculateDiff(
   }
 
   // Compare features
-  const committedFeatures = committed.features;
-  const stagedFeatures = staged.features;
+  const committedFeatures = committed.features || [];
+  const stagedFeatures = staged.features || [];
 
   stagedFeatures.forEach((feature) => {
     const committedFeature = committedFeatures.find((f) => f.id === feature.id);
