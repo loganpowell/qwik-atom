@@ -5,7 +5,7 @@ export default component$(() => {
   return (
     <>
       <Slot />
-      <DevBar />
+      {import.meta.env.DEV && <DevBar />}
     </>
   );
 });
