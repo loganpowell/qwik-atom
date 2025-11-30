@@ -24,10 +24,14 @@ export const FeatureCard = component$<{ feature: Feature }>(({ feature }) => {
         }}
       >
         <div style={{ flex: 1 }}>
-          <h4 style={{ marginBottom: "calc(var(--spacing-unit) * 1)" }}>
+          <h4
+            style={{
+              marginBottom: "calc(var(--spacing-unit) * 1)",
+              fontWeight: "900",
+            }}
+          >
             {feature.name}
           </h4>
-          <p style={{ fontSize: "0.875rem" }}>{feature.description}</p>
         </div>
         <button
           class="accent"

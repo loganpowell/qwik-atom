@@ -38,7 +38,7 @@ export default component$(() => {
       <hr />
 
       <div style={{ marginBottom: "calc(var(--spacing-unit) * 4)" }}>
-        <Link href="/features">View All Features →</Link>
+        <Link href="/features">View All Features</Link>
       </div>
 
       <h2>Recent Features</h2>

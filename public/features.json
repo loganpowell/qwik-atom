@@ -2,18 +2,15 @@
   "features": [
     {
       "id": "1",
-      "name": "The ostrich shoves his head in the sand",
-      "description": "New feature description"
+      "name": "The ostrich shoves his head in the sand"
     },
     {
       "id": "2",
-      "name": "and believes he has hidden what he saw",
-      "description": "New feature description"
+      "name": "and believes he has hidden what he saw"
     },
     {
       "id": "3",
-      "name": "from the world!",
-      "description": "New feature description"
+      "name": "from the world!"
     }
   ]
 }

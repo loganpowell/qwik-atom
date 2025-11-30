@@ -18,7 +18,7 @@ export default component$(() => {
       style={{ padding: "calc(var(--spacing-unit) * 8)", maxWidth: "800px" }}
     >
       <div style={{ marginBottom: "calc(var(--spacing-unit) * 6)" }}>
-        <Link href="/">← Back</Link>
+        <Link href="/">Back</Link>
       </div>
 
       <h1>Features</h1>

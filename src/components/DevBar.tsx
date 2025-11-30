@@ -63,26 +63,12 @@ export const DevBar = component$(() => {
       <div
         style={{
           display: "flex",
-          gap: "calc(var(--spacing-unit) * 1)",
+          gap: "var(--spacing-unit)",
           flexDirection: "column",
         }}
       >
         <button
           class="accent"
-          onClick$={() => {
-            localStorage.removeItem("appState");
-            window.location.reload();
-          }}
-          style={{
-            fontSize: "0.75rem",
-            padding:
-              "calc(var(--spacing-unit) * 1) calc(var(--spacing-unit) * 2)",
-          }}
-        >
-          Reset
-        </button>
-
-        <button
           onClick$={() => {
             // Rollback: reset staged to committed
             stateCursor.reset(JSON.parse(JSON.stringify(commits)));
@@ -96,56 +82,57 @@ export const DevBar = component$(() => {
           disabled={!diff.hasChanges}
           style={{
             fontSize: "0.75rem",
-            padding:
-              "calc(var(--spacing-unit) * 1) calc(var(--spacing-unit) * 2)",
+            padding: "calc(var(--spacing-unit)) calc(var(--spacing-unit) * 2)",
           }}
         >
           Rollback
         </button>
 
-        <button
-          class={diff.hasChanges ? "primary" : ""}
-          onClick$={async () => {
-            try {
-              // Serialize the data to remove any circular references
-              const serializedData = JSON.parse(JSON.stringify(state));
+        {import.meta.env.DEV && (
+          <button
+            class={diff.hasChanges ? "primary" : ""}
+            onClick$={async () => {
+              try {
+                // Serialize the data to remove any circular references
+                const serializedData = JSON.parse(JSON.stringify(state));
 
-              const response = await fetch("/api/features", {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ features: serializedData.features }),
-              });
+                const response = await fetch("/api/features", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({ features: serializedData.features }),
+                });
 
-              if (response.ok) {
-                // Update committed to match staged
-                commitsCursor.reset(JSON.parse(JSON.stringify(state)));
+                if (response.ok) {
+                  // Update committed to match staged
+                  commitsCursor.reset(JSON.parse(JSON.stringify(state)));
 
-                // Clear localStorage since committed now matches staged
-                localStorage.removeItem("appState");
+                  // Clear localStorage since committed now matches staged
+                  localStorage.removeItem("appState");
 
-                // Recalculate diff (should now be "no changes")
-                diffCursor.reset(calculateDiff(state, state));
+                  // Recalculate diff (should now be "no changes")
+                  diffCursor.reset(calculateDiff(state, state));
 
-                alert("✅ Features committed to file successfully!");
-              } else {
-                alert("❌ Failed to commit features");
+                  alert("✅ Features committed to file successfully!");
+                } else {
+                  alert("❌ Failed to commit features");
+                }
+              } catch (error) {
+                console.error("Error committing features:", error);
+                alert("❌ Error committing features");
               }
-            } catch (error) {
-              console.error("Error committing features:", error);
-              alert("❌ Error committing features");
-            }
-          }}
-          disabled={!diff.hasChanges}
-          style={{
-            fontSize: "0.75rem",
-            padding:
-              "calc(var(--spacing-unit) * 1) calc(var(--spacing-unit) * 2)",
-          }}
-        >
-          Commit
-        </button>
+            }}
+            disabled={!diff.hasChanges}
+            style={{
+              fontSize: "0.75rem",
+              padding:
+                "calc(var(--spacing-unit)) calc(var(--spacing-unit) * 2)",
+            }}
+          >
+            Commit
+          </button>
+        )}
       </div>
     </div>
   );
