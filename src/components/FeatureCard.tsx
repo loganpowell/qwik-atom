@@ -1,67 +1,64 @@
-import { component$, useContext } from "@qwik.dev/core";
+import { component$, useSignal, $ } from "@qwik.dev/core";
 import type { Feature } from "~/types/data";
 import { APP_STATE_CTX } from "~/store/appStore";
 import { useContextCursor } from "~/hooks/useContextCursor";
+import { useDeeplink } from "~/hooks/useDeeplink";
+import { UnifiedPokemonCard } from "./PokemonCard/UnifiedPokemonCard";
 
 export const FeatureCard = component$<{ feature: Feature }>(({ feature }) => {
   const [, featuresCursor] = useContextCursor(APP_STATE_CTX, ["features"]);
+  const { isHighlighted, cardRef } = useDeeplink(feature.id);
+  const showCopied = useSignal(false);
+  const isEditing = useSignal(false);
+
+  const updateFeature = $((updates: Partial<Feature>) => {
+    featuresCursor.swap((features: Feature[]) =>
+      features.map((f) => (f.id === feature.id ? { ...f, ...updates } : f))
+    );
+  });
+
+  const deleteFeature = $(() => {
+    featuresCursor.swap((features: Feature[]) =>
+      features.filter((f) => f.id !== feature.id)
+    );
+  });
+
+  const copyLink = $(() => {
+    const url = `${window.location.pathname}#${feature.id}`;
+    navigator.clipboard.writeText(window.location.origin + url);
+    showCopied.value = true;
+    setTimeout(() => {
+      showCopied.value = false;
+    }, 1500);
+  });
 
   return (
     <div
+      id={feature.id}
+      ref={cardRef}
       style={{
         borderTop: "1px solid var(--color-border)",
         paddingTop: "calc(var(--spacing-unit) * 3)",
         paddingBottom: "calc(var(--spacing-unit) * 3)",
         display: "grid",
-        gap: "calc(var(--spacing-unit) * 2)",
+        gap: "calc(var(--spacing-unit) * 3)",
+        backgroundColor: isHighlighted.value
+          ? "var(--color-highlight, rgba(255, 255, 0, 0.1))"
+          : "transparent",
+        transition: "background-color 0.3s ease",
+        scrollMarginTop: "calc(var(--spacing-unit) * 4)",
+        position: "relative",
       }}
     >
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "start",
-        }}
-      >
-        <div style={{ flex: 1 }}>
-          <h4
-            style={{
-              marginBottom: "calc(var(--spacing-unit) * 1)",
-              fontWeight: "900",
-            }}
-          >
-            {feature.name}
-          </h4>
-        </div>
-        <button
-          class="accent"
-          onClick$={() => {
-            featuresCursor.swap((features: Feature[]) =>
-              features.filter((f) => f.id !== feature.id)
-            );
-          }}
-          style={{
-            padding:
-              "calc(var(--spacing-unit) * 1) calc(var(--spacing-unit) * 2)",
-            fontSize: "0.75rem",
-          }}
-        >
-          Delete
-        </button>
-      </div>
-      <input
-        type="text"
-        value={feature.name}
-        placeholder="Feature name"
-        onInput$={(e) => {
-          const newName = (e.target as HTMLInputElement).value;
-
-          featuresCursor.swap((features: Feature[]) =>
-            features.map((f) =>
-              f.id === feature.id ? { ...f, name: newName } : f
-            )
-          );
-        }}
+      {/* Unified component that handles both view and edit modes */}
+      <UnifiedPokemonCard
+        feature={feature}
+        onUpdate={updateFeature}
+        onDelete={deleteFeature}
+        isEditing={isEditing}
+        isHighlighted={isHighlighted}
+        showCopied={showCopied}
+        onCopyLink={copyLink}
       />
     </div>
   );

@@ -2,15 +2,112 @@
   "features": [
     {
       "id": "1",
-      "name": "The ostrich shoves his head in the sand"
+      "name": "Pikachu",
+      "description": "When several of these Pokémon gather, their electricity could build and cause lightning storms.",
+      "hp": 60,
+      "type": "Lightning",
+      "stage": "Basic",
+      "attacks": [
+        {
+          "name": "Thunder Shock",
+          "cost": [
+            "Lightning"
+          ],
+          "damage": "10",
+          "description": "Flip a coin. If heads, the Defending Pokémon is now Paralyzed."
+        },
+        {
+          "name": "Thunderbolt",
+          "cost": [
+            "Lightning",
+            "Colorless"
+          ],
+          "damage": "30",
+          "description": "Discard all Lightning Energy attached to Pikachu."
+        }
+      ],
+      "weakness": {
+        "type": "Fighting",
+        "multiplier": "×2"
+      },
+      "resistance": {
+        "type": "Metal",
+        "amount": "-20"
+      },
+      "retreatCost": 1,
+      "rarity": "Common",
+      "illustrator": "Ken Sugimori",
+      "cardNumber": "025",
+      "set": "Base Set"
     },
     {
       "id": "2",
-      "name": "and believes he has hidden what he saw"
+      "name": "Charizard",
+      "description": "Spits fire that is hot enough to melt boulders. Known to cause forest fires unintentionally.",
+      "hp": 120,
+      "type": "Fire",
+      "stage": "Stage 2",
+      "evolvesFrom": "Charmeleon",
+      "ability": {
+        "name": "Energy Burn",
+        "description": "As often as you like during your turn, you may turn all Energy attached to Charizard into Fire Energy for the rest of the turn."
+      },
+      "attacks": [
+        {
+          "name": "Fire Spin",
+          "cost": [
+            "Fire",
+            "Fire",
+            "Fire",
+            "Fire"
+          ],
+          "damage": "100",
+          "description": "Discard 2 Energy attached to Charizard."
+        }
+      ],
+      "weakness": {
+        "type": "Water",
+        "multiplier": "×2"
+      },
+      "retreatCost": 3,
+      "rarity": "Rare Holo",
+      "illustrator": "Mitsuhiro Arita",
+      "cardNumber": "006",
+      "set": "Base Set"
     },
     {
       "id": "3",
-      "name": "from the world!"
+      "name": "Blastoise",
+      "description": "A brutal Pokémon with pressurized water jets on its shell. They are used for high speed tackles.",
+      "hp": 100,
+      "type": "Water",
+      "stage": "Stage 2",
+      "evolvesFrom": "Wartortle",
+      "ability": {
+        "name": "Rain Dance",
+        "description": "As often as you like during your turn, you may attach a Water Energy card from your hand to 1 of your Water Pokémon."
+      },
+      "attacks": [
+        {
+          "name": "Hydro Pump",
+          "cost": [
+            "Water",
+            "Water",
+            "Water"
+          ],
+          "damage": "40+",
+          "description": "Does 40 damage plus 10 more damage for each Water Energy attached to Blastoise but not used to pay for this attack's Energy cost."
+        }
+      ],
+      "weakness": {
+        "type": "Lightning",
+        "multiplier": "×2"
+      },
+      "retreatCost": 3,
+      "rarity": "Rare Holo",
+      "illustrator": "Ken Sugimori",
+      "cardNumber": "009",
+      "set": "Base Set"
     }
   ]
 }

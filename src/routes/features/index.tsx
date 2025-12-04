@@ -17,13 +17,17 @@ export default component$(() => {
   // console.log("Rendering Features page with features:", sortedFeatures);
   return (
     <div
-      style={{ padding: "calc(var(--spacing-unit) * 8)", maxWidth: "800px" }}
+      style={{
+        padding: "calc(var(--spacing-unit) * 8)",
+        maxWidth: "800px",
+        margin: "0 auto",
+      }}
     >
       <div style={{ marginBottom: "calc(var(--spacing-unit) * 6)" }}>
         <Link href="/">Back</Link>
       </div>
 
-      <h1>Features</h1>
+      <h1>Pokémon Cards</h1>
 
       <button
         class="primary"
@@ -31,10 +35,27 @@ export default component$(() => {
           // swap() receives the current value as a parameter - no await needed!
           featuresCursor.swap((currentFeatures: Feature[]) => {
             const newId = String(currentFeatures.length + 1);
-            const newFeature = {
+            const newFeature: Feature = {
               id: newId,
-              name: `Feature ${newId}`,
-              description: "New feature description",
+              name: "New Pokémon",
+              description: "A mysterious new Pokémon has appeared!",
+              hp: 60,
+              type: "Colorless",
+              stage: "Basic",
+              attacks: [
+                {
+                  name: "Tackle",
+                  cost: ["Colorless"],
+                  damage: "10",
+                },
+              ],
+              retreatCost: 1,
+              rarity: "Common",
+              cardNumber: `${String(currentFeatures.length + 1).padStart(
+                3,
+                "0"
+              )}`,
+              set: "Custom Set",
             };
             return [...currentFeatures, newFeature];
           });
@@ -43,7 +64,7 @@ export default component$(() => {
           marginBottom: "calc(var(--spacing-unit) * 6)",
         }}
       >
-        Add Feature
+        Add Pokémon Card
       </button>
 
       <div>
@@ -53,7 +74,7 @@ export default component$(() => {
             marginBottom: "calc(var(--spacing-unit) * 4)",
           }}
         >
-          {sortedFeatures.length} total
+          {sortedFeatures.length} total cards
         </p>
         {sortedFeatures.map((f) => (
           <FeatureCard key={f.id} feature={f} />
