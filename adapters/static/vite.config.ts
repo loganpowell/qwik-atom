@@ -5,7 +5,7 @@ import baseConfig from "../../vite.config";
 export default extendConfig(baseConfig, () => {
   return {
     // This is crucial for GitHub Pages: https://loganpowell.github.io/qwik-lens/
-    // base: "/qwik-lens/",
+    base: "/qwik-lens/",
 
     build: {
       // Enables Server-Side Rendering (SSR) during the build process
