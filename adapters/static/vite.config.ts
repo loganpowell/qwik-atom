@@ -12,7 +12,7 @@ export default extendConfig(baseConfig, () => {
     },
     plugins: [
       ssgAdapter({
-        origin: "https://loganpowell.github.io/qwik-lens",
+        origin: "https://loganpowell.github.io",
       }),
     ],
   };
