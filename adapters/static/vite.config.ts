@@ -9,11 +9,12 @@ export default extendConfig(baseConfig, () => {
       rollupOptions: {
         input: ["src/entry.ssr.tsx", "@qwik-router-config"],
       },
+      outDir: "../dist",
     },
     plugins: [
       staticAdapter({
         origin: process.env.GITHUB_PAGES
-          ? "https://loganpowell.github.io"
+          ? "https://loganpowell.github.io/qwik-lens"
           : "http://localhost:5173",
       }),
     ],
