@@ -21,6 +21,10 @@ import { calculateDiff, type DiffState } from "./store/diff";
 import { useContextCursor } from "./hooks/useContextCursor";
 
 import "./global.css";
+const repo = process.env.REPO_NAME;
+const repoPath = repo ? "/" + repo : "";
+const featuresEndpoint = repoPath + "/features.json";
+const manifestEndpoint = repoPath + "/manifest.json";
 
 export default component$(() => {
   const state = useStore<DataState>(createEmptyDataState());
@@ -42,11 +46,10 @@ export default component$(() => {
   const [, stateCursor] = useContextCursor(APP_STATE_CTX);
   const [, committedCursor] = useContextCursor(COMMITTED_STATE_CTX);
   const [, diffCursor] = useContextCursor(DIFF_STATE_CTX);
-
   useVisibleTask$(
     async () => {
       // 1. Load committed state from JSON file
-      const response = await fetch("features.json");
+      const response = await fetch(featuresEndpoint);
       if (!response.ok) {
         throw new Error("Failed to load features.json");
       }
@@ -94,7 +97,7 @@ export default component$(() => {
     <QwikRouterProvider>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="manifest" href="manifest.json" />
+        <link rel="manifest" href={manifestEndpoint} />
         <RouterHead />
       </head>
       <body lang="en">

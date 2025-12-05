@@ -14,6 +14,7 @@ const { dependencies = {}, devDependencies = {} } = pkg as any as {
   devDependencies: PkgDep;
   [key: string]: unknown;
 };
+
 errorOnDuplicatesPkgDeps(devDependencies, dependencies);
 
 /**
@@ -21,7 +22,6 @@ errorOnDuplicatesPkgDeps(devDependencies, dependencies);
  */
 export default defineConfig(({ command, mode }): UserConfig => {
   return {
-    base: "/qwik-lens/",
     plugins: [
       qwikRouter(),
       qwikVite(/**{ devTools: { clickToSource: false } }**/),
@@ -34,19 +34,12 @@ export default defineConfig(({ command, mode }): UserConfig => {
     optimizeDeps: {
       // Put problematic deps that break bundling here, mostly those with binaries.
       // For example ['better-sqlite3'] if you use that in server functions.
-      exclude: ["@tanstack/qwik-table", "@qwik.dev/core", "@qwik.dev/router"],
+      exclude: ["@qwik.dev/core", "@qwik.dev/router"],
     },
 
     // SSR configuration
     ssr: {
-      noExternal: [
-        "@tanstack/qwik-table",
-        "@qwik.dev/core",
-        "@qwik.dev/router",
-        "@thi.ng/api",
-        "@thi.ng/equiv",
-        "@thi.ng/paths",
-      ],
+      noExternal: ["@qwik.dev/core", "@qwik.dev/router", "@thi.ng/equiv"],
     },
     server: {
       headers: {

@@ -1,6 +1,4 @@
 import { useContext, $, type ContextId, type QRL } from "@qwik.dev/core";
-// import type { Path, Path0, OptPathVal } from "@thi.ng/api";
-// import { getIn } from "@thi.ng/paths";
 import {
   APP_STATE_CTX,
   COMMITTED_STATE_CTX,

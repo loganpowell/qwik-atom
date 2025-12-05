@@ -3,7 +3,7 @@ import type { Feature } from "~/types/data";
 import { APP_STATE_CTX } from "~/store/appStore";
 import { useContextCursor } from "~/hooks/useContextCursor";
 import { useDeeplink } from "~/hooks/useDeeplink";
-import { UnifiedPokemonCard } from "./PokemonCard/UnifiedPokemonCard";
+import { UnifiedPokemonCard } from "./PokemonCard/Card";
 
 export const FeatureCard = component$<{ feature: Feature }>(({ feature }) => {
   const [, featuresCursor] = useContextCursor(APP_STATE_CTX, ["features"]);

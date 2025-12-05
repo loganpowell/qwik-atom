@@ -4,13 +4,13 @@ import baseConfig from "../../vite.config";
 
 export default extendConfig(baseConfig, () => {
   return {
+    // This is crucial for GitHub Pages: https://loganpowell.github.io/qwik-lens/
+    // base: "/qwik-lens/",
+
     build: {
       // Enables Server-Side Rendering (SSR) during the build process
       // This pre-renders pages at build time for better SEO and initial load performance
       ssr: true,
-      
-      // Keep output in standard dist directory
-      outDir: "../../dist",
 
       rollupOptions: {
         // Specifies the entry point for the build
@@ -24,7 +24,7 @@ export default extendConfig(baseConfig, () => {
       ssgAdapter({
         // The production URL where the site will be hosted
         // This is used to generate absolute URLs for links, SEO metadata, etc.
-        origin: "https://loganpowell.github.io",
+        origin: "https://loganpowell.github.io/qwik-lens",
       }),
     ],
   };
