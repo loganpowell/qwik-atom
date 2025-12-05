@@ -9,7 +9,6 @@ export default extendConfig(baseConfig, () => {
       rollupOptions: {
         input: ["src/entry.ssr.tsx", "@qwik-router-config"],
       },
-      outDir: "../dist",
     },
     plugins: [
       staticAdapter({
