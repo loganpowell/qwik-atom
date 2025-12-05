@@ -12,7 +12,9 @@ export default extendConfig(baseConfig, () => {
     },
     plugins: [
       staticAdapter({
-        origin: "https://your-domain.com", // Update with your actual domain
+        origin:
+          process.env.GITHUB_PAGES_ORIGIN ||
+          "https://loganpowell.github.io/qwik-lens",
       }),
     ],
   };
