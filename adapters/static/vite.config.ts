@@ -1,4 +1,4 @@
-import { staticAdapter } from "@qwik.dev/router/adapters/static/vite";
+import { ssgAdapter } from "@qwik.dev/router/adapters/static/vite";
 import { extendConfig } from "@qwik.dev/router/vite";
 import baseConfig from "../../vite.config";
 
@@ -12,7 +12,7 @@ export default extendConfig(baseConfig, () => {
       },
     },
     plugins: [
-      staticAdapter({
+      ssgAdapter({
         origin: "https://loganpowell.github.io",
       }),
     ],
