@@ -46,7 +46,7 @@ export default component$(() => {
   useVisibleTask$(
     async () => {
       // 1. Load committed state from JSON file
-      const response = await fetch("/features.json");
+      const response = await fetch("features.json");
       if (!response.ok) {
         throw new Error("Failed to load features.json");
       }
@@ -94,7 +94,7 @@ export default component$(() => {
     <QwikRouterProvider>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="manifest" href="/manifest.json" />
+        <link rel="manifest" href="manifest.json" />
         <RouterHead />
       </head>
       <body lang="en">
