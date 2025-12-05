@@ -46,6 +46,16 @@ export const UnifiedPokemonCard = component$<UnifiedCardProps>(
               cursor: default;
               resize: none;
             }
+
+            .card-permalink {
+              opacity: 0;
+              transition: opacity 0.2s ease;
+              padding: calc(var(--spacing-unit) * 1.2);
+            }
+
+            .unified-pokemon-card:hover .card-permalink {
+              opacity: 1;
+            }
           `}
         </style>
 
@@ -64,26 +74,66 @@ export const UnifiedPokemonCard = component$<UnifiedCardProps>(
                 display: "flex",
                 flexDirection: "column",
                 gap: "calc(var(--spacing-unit) * 0.5)",
+                position: "relative",
               }}
             >
-              <input
-                type="text"
-                value={feature.cardNumber || ""}
-                onInput$={(e) =>
-                  updateFeature({
-                    cardNumber: (e.target as HTMLInputElement).value,
-                  })
-                }
-                placeholder="###"
-                disabled={!editing}
-                style={{
-                  fontSize: "2rem",
-                  fontWeight: "900",
-                  fontFamily: "monospace",
-                  color: "var(--color-text-primary)",
-                  width: "80px",
-                }}
-              />
+              {/* Permalink hash - appears on hover to the left */}
+              {!editing && (
+                <a
+                  href={`#${feature.id}`}
+                  class="card-permalink"
+                  style={{
+                    position: "absolute",
+                    left: "-3rem",
+                    bottom: "calc(var(--spacing-unit) * 0.5 + 19.5px)",
+                    fontSize: "2rem",
+                    fontWeight: "900",
+                    fontFamily: "monospace",
+                    color: "var(--color-text-secondary)",
+                    textDecoration: "none",
+                    lineHeight: "1",
+                  }}
+                  title="Permalink to this card"
+                >
+                  #
+                </a>
+              )}
+
+              {/* Card Number as link in view mode, input in edit mode */}
+              {editing ? (
+                <input
+                  type="text"
+                  value={feature.cardNumber || ""}
+                  onInput$={(e) =>
+                    updateFeature({
+                      cardNumber: (e.target as HTMLInputElement).value,
+                    })
+                  }
+                  placeholder="###"
+                  style={{
+                    fontSize: "2rem",
+                    fontWeight: "900",
+                    fontFamily: "monospace",
+                    color: "var(--color-text-primary)",
+                    width: "80px",
+                  }}
+                />
+              ) : (
+                <a
+                  href={`#${feature.id}`}
+                  style={{
+                    fontSize: "2rem",
+                    fontWeight: "900",
+                    fontFamily: "monospace",
+                    color: "var(--color-text-primary)",
+                    textDecoration: "none",
+                    width: "80px",
+                  }}
+                  title="Permalink to this card"
+                >
+                  {feature.cardNumber || "###"}
+                </a>
+              )}
               <LabeledInput
                 label="HP"
                 value={feature.hp || ""}
@@ -694,28 +744,6 @@ export const UnifiedPokemonCard = component$<UnifiedCardProps>(
               }}
             />
           </InputGrid>
-
-          {/* Permalink (view mode only) */}
-          {!editing && (
-            <div style={{ display: "flex", justifyContent: "flex-end" }}>
-              <button
-                onClick$={onCopyLink}
-                style={{
-                  background: "none",
-                  border: "none",
-                  cursor: "pointer",
-                  fontSize: "1.2rem",
-                  color: "var(--color-text-secondary)",
-                  padding: "0",
-                  lineHeight: "1",
-                  transition: "color 0.2s ease",
-                }}
-                title="Copy link to this card"
-              >
-                {showCopied.value ? "✓" : "🔗"}
-              </button>
-            </div>
-          )}
         </div>
       </>
     );

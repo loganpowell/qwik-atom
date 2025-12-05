@@ -87,7 +87,7 @@ export const DevBar = component$(() => {
         >
           Rollback
         </button>
-
+        {/* only show commit option in dev mode */}
         {import.meta.env.DEV && (
           <button
             class={diff.hasChanges ? "primary" : ""}
