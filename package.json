@@ -8,7 +8,7 @@
     "build": "qwik build",
     "build.client": "vite build",
     "build.server": "vite build -c adapters/static/vite.config.ts",
-    "postbuild": "cp -r dist/build dist/assets dist/qwik-lens/ 2>/dev/null || true",
+    "postbuild": "cp -r dist/build dist/assets dist/qwik-lens/ && cp dist/*.json dist/qwik-lens/ 2>/dev/null || true",
     "preview": "npx http-server dist -p 8080",
     "ssg": "pnpm run build && pnpm run preview"
   },
