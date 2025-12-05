@@ -4,10 +4,11 @@ import baseConfig from "../../vite.config";
 
 export default extendConfig(baseConfig, () => {
   return {
+    base: "/",
     build: {
       ssr: true,
       rollupOptions: {
-        input: ["src/entry.ssr.tsx", "@qwik-router-config"],
+        input: ["@qwik-city-plan"],
       },
     },
     plugins: [
